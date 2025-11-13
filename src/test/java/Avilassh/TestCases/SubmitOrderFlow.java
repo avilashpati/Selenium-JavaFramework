@@ -21,6 +21,7 @@ import java.util.List;
 
 public class SubmitOrderFlow extends BaseTest {
 
+    // Testing QA 
     @Test(dataProvider = "getData",groups = {"Products","Smoke"})
     public void OrderAdditionToCart(HashMap<String,String> input) throws IOException {
         ProductCatalogue productCatalogue = landingPage.loginApplication(input.get("email"),input.get("password"));
