@@ -1,16 +1,18 @@
-name: Run Automation Tests
+name: Selenium Framework Run
 
 on:
-  schedule:
-    - cron: "0 */2 * * *"
   workflow_dispatch:
+  schedule:
+    - cron: "0 */4 * * *"
 
 jobs:
-  run-tests:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -18,5 +20,8 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Run Tests
+      - name: Build Project
+        run: mvn clean install -DskipTests
+
+      - name: Run Automation Tests
         run: mvn test
