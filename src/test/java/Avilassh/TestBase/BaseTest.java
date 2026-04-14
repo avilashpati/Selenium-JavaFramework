@@ -11,13 +11,11 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -26,68 +24,108 @@ import java.util.List;
 import java.util.Properties;
 
 public class BaseTest {
+
     public WebDriver driver;
     public LandingPage landingPage;
 
     public WebDriver initializeDriver() throws IOException {
+
         Properties prop = new Properties();
-        FileInputStream fis = new FileInputStream(System.getProperty("user.dir") + "//src//main//java//Avilassh//Resources//GlobalData.properties");
+        FileInputStream fis = new FileInputStream(
+                System.getProperty("user.dir")
+                        + "//src//main//java//Avilassh//Resources//GlobalData.properties");
+
         prop.load(fis);
 
-        String browserName = System.getProperty("browser")!=null?System.getProperty("browser"):prop.getProperty("browser");
-//        String browserName = prop.getProperty("browser");
+        String browserName = System.getProperty("browser") != null ?
+                System.getProperty("browser") :
+                prop.getProperty("browser");
 
         if (browserName.contains("chrome")) {
+
             ChromeOptions options = new ChromeOptions();
+
             WebDriverManager.chromedriver().setup();
 
-            if(browserName.contains("headless")){
-                options.addArguments("headless");
+            // Run headless in CI environments (GitHub Actions)
+            if (browserName.contains("headless") || System.getenv("CI") != null) {
+                options.addArguments("--headless=new");
             }
 
+            // Required for Linux CI environments
+            options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
+
             driver = new ChromeDriver(options);
-            driver.manage().window().setSize(new Dimension(1440,900));
+
+            driver.manage().window().setSize(new Dimension(1440, 900));
 
         } else if (browserName.equalsIgnoreCase("firefox")) {
-            //Firefox
+
+            System.out.println("Firefox setup not implemented yet");
+
         } else if (browserName.equalsIgnoreCase("edge")) {
-            //Edge
+
+            System.out.println("Edge setup not implemented yet");
+
         } else {
+
             System.out.println("Please enter valid browser name");
         }
+
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.manage().window().maximize();
+
         return driver;
     }
 
     public String getScreenshot(String testCaseName, WebDriver driver) throws IOException {
-        TakesScreenshot ts = (TakesScreenshot)driver;
+
+        TakesScreenshot ts = (TakesScreenshot) driver;
+
         File source = ts.getScreenshotAs(OutputType.FILE);
-        File file = new File(System.getProperty("user.dir")+"//reports//"+testCaseName+".png");
-        FileUtils.copyFile(source,file);
-        return System.getProperty("user.dir")+"//reports//"+testCaseName+".png";
+
+        File file = new File(System.getProperty("user.dir")
+                + "//reports//" + testCaseName + ".png");
+
+        FileUtils.copyFile(source, file);
+
+        return System.getProperty("user.dir")
+                + "//reports//" + testCaseName + ".png";
     }
 
+    public List<HashMap<String, String>> getJsonDataToMap(String filePath) throws IOException {
 
-    public List<HashMap<String,String>> getJsonDataToMap(String filePath) throws IOException {
-        String jsonContent = FileUtils.readFileToString(new File(filePath), StandardCharsets.UTF_8);
-        ObjectMapper mapper=new ObjectMapper();
-        List<HashMap<String,String>> data = mapper.readValue(jsonContent,new TypeReference<List<HashMap<String,String>>>(){});
+        String jsonContent = FileUtils.readFileToString(
+                new File(filePath), StandardCharsets.UTF_8);
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        List<HashMap<String, String>> data =
+                mapper.readValue(jsonContent,
+                        new TypeReference<List<HashMap<String, String>>>() {});
+
         return data;
     }
 
-
     @BeforeMethod(alwaysRun = true)
     public LandingPage launchApplication() throws IOException {
+
         driver = initializeDriver();
+
         landingPage = new LandingPage(driver);
+
         landingPage.goTo();
+
         return landingPage;
     }
 
     @AfterMethod(alwaysRun = true)
-    public void TearDown(){
-        driver.close();
-    }
+    public void TearDown() {
 
+        if (driver != null) {
+            driver.quit();
+        }
+
+    }
 }
