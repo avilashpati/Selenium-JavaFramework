@@ -29,19 +29,26 @@ public class LandingPage extends UtilMethods {
     WebElement errorMessage;
 
     public void goTo(){
+        System.out.println("[NAV] Navigating to application URL");
         driver.get("https://rahulshettyacademy.com/client");
+        System.out.println("[NAV] Page loaded: " + driver.getTitle());
     }
 
     public String fetchErrorMessage(){
+        System.out.println("[LOGIN] Fetching error message");
         WaitForWebElementToAppear(errorMessage);
-        return errorMessage.getText();
+        String msg = errorMessage.getText();
+        System.out.println("[LOGIN] Error message: " + msg);
+        return msg;
     }
 
     public ProductCatalogue loginApplication(String email, String password){
+        System.out.println("[LOGIN] Attempting login with email: " + email);
         WaitForWebElementToAppear(userEmail);
         userEmail.sendKeys(email);
         userPassword.sendKeys(password);
         jsClick(loginButton);
+        System.out.println("[LOGIN] Login button clicked");
         return new ProductCatalogue(driver);
     }
 

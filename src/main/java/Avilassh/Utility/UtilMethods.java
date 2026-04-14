@@ -28,22 +28,30 @@ public class UtilMethods {
     }
 
     public void WaitForElementToAppear(By findBy){
+        System.out.println("[WAIT] Waiting for element to appear: " + findBy);
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(getWaitTimeout()));
         wait.until(ExpectedConditions.visibilityOfElementLocated(findBy));
+        System.out.println("[WAIT] Element visible: " + findBy);
     }
 
     public void WaitForWebElementToAppear(WebElement findBy){
+        System.out.println("[WAIT] Waiting for WebElement to appear: " + findBy);
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(getWaitTimeout()));
         wait.until(ExpectedConditions.visibilityOf(findBy));
+        System.out.println("[WAIT] WebElement visible");
     }
 
     public void WaitForElementToDisappear(By findBy){
+        System.out.println("[WAIT] Waiting for element to disappear: " + findBy);
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(getWaitTimeout()));
         wait.until(ExpectedConditions.invisibilityOfElementLocated(findBy));
+        System.out.println("[WAIT] Element gone: " + findBy);
     }
 
     public void jsClick(WebElement element){
+        System.out.println("[CLICK] JS click on element: " + element);
         ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+        System.out.println("[CLICK] JS click executed");
     }
 
     public CartPage clickOnCart(){

@@ -40,31 +40,43 @@ public class ProductCatalogue extends UtilMethods {
 
 
     public List<WebElement> getItemList(){
+        System.out.println("[CATALOGUE] Waiting for product list to load");
         WaitForElementToAppear(ItemsList);
+        System.out.println("[CATALOGUE] Products loaded: " + items.size() + " items found");
         return items;
     }
 
     public void addProductToCart(List<WebElement> itemsSet, String desiredItem){
+        System.out.println("[CATALOGUE] Waiting for toast to disappear before clicking Add to Cart");
         WaitForElementToDisappear(toast);
+        System.out.println("[CATALOGUE] Searching for product: " + desiredItem);
         for(WebElement selectedItem : itemsSet){
-            if(selectedItem.findElement(By.cssSelector("b")).getText().equalsIgnoreCase(desiredItem)){
+            String itemName = selectedItem.findElement(By.cssSelector("b")).getText();
+            if(itemName.equalsIgnoreCase(desiredItem)){
+                System.out.println("[CATALOGUE] Product found: " + itemName + " - clicking Add to Cart");
                 WebElement btn = selectedItem.findElement(addToCartBtn);
                 WaitForWebElementToAppear(btn);
                 jsClick(btn);
+                System.out.println("[CATALOGUE] Add to Cart clicked successfully");
                 break;
             }
         }
     }
 
-
     public String fetchProductAddedToCartSuccessToast(){
+        System.out.println("[CATALOGUE] Waiting for cart addition toast");
         WaitForWebElementToAppear(cartAdditionNotification);
-        return cartAdditionNotification.getText();
+        String msg = cartAdditionNotification.getText();
+        System.out.println("[CATALOGUE] Cart toast message: " + msg);
+        return msg;
     }
 
     public String fetchLoginSuccessToast(){
+        System.out.println("[CATALOGUE] Waiting for login success toast");
         WaitForWebElementToAppear(loginSuccessToast);
-        return loginSuccessToast.getText();
+        String msg = loginSuccessToast.getText();
+        System.out.println("[CATALOGUE] Login toast message: " + msg);
+        return msg;
     }
 
 

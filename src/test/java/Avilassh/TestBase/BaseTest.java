@@ -41,15 +41,17 @@ public class BaseTest {
                 System.getProperty("browser") :
                 prop.getProperty("browser");
 
+        System.out.println("[DRIVER] Initializing browser: " + browserName);
+
         if (browserName.contains("chrome")) {
 
             ChromeOptions options = new ChromeOptions();
 
             WebDriverManager.chromedriver().setup();
 
-            // Run headless in CI environments (GitHub Actions)
             if (browserName.contains("headless") || System.getenv("CI") != null) {
                 options.addArguments("--headless=new");
+                System.out.println("[DRIVER] Headless mode enabled");
             }
 
             // Required for Linux CI environments
@@ -74,8 +76,10 @@ public class BaseTest {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         if (System.getenv("CI") != null) {
             driver.manage().window().setSize(new Dimension(1920, 1080));
+            System.out.println("[ENV] Running in CI mode - window size set to 1920x1080");
         } else {
             driver.manage().window().maximize();
+            System.out.println("[ENV] Running in LOCAL mode - window maximized");
         }
 
         return driver;
@@ -112,22 +116,20 @@ public class BaseTest {
 
     @BeforeMethod(alwaysRun = true)
     public LandingPage launchApplication() throws IOException {
-
+        System.out.println("[TEST] Launching application...");
         driver = initializeDriver();
-
         landingPage = new LandingPage(driver);
-
         landingPage.goTo();
-
+        System.out.println("[TEST] Application launched successfully");
         return landingPage;
     }
 
     @AfterMethod(alwaysRun = true)
     public void TearDown() {
-
+        System.out.println("[TEST] Tearing down driver...");
         if (driver != null) {
             driver.quit();
         }
-
+        System.out.println("[TEST] Driver closed");
     }
 }
