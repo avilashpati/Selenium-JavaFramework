@@ -38,9 +38,10 @@ public class LandingPage extends UtilMethods {
     }
 
     public ProductCatalogue loginApplication(String email, String password){
+        WaitForWebElementToAppear(userEmail);
         userEmail.sendKeys(email);
         userPassword.sendKeys(password);
-        loginButton.click();
+        jsClick(loginButton);
         return new ProductCatalogue(driver);
     }
 
