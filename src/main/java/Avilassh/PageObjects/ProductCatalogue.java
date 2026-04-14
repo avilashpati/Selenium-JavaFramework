@@ -36,6 +36,7 @@ public class ProductCatalogue extends UtilMethods {
     By ItemsList = By.cssSelector(".mb-3");
     By toast = By.id("toast-container");
     By cart = By.cssSelector("button[routerlink*='cart']");
+    By addToCartBtn = By.cssSelector("button:last-of-type");
 
 
     public List<WebElement> getItemList(){
@@ -43,10 +44,14 @@ public class ProductCatalogue extends UtilMethods {
         return items;
     }
 
-    public void addProductToCart(List<WebElement> itemsSet,String desiredItem){
-        for(WebElement selectedItem:itemsSet){
-            if(selectedItem.getText().equalsIgnoreCase(desiredItem)){
-                addToCart.click();
+    public void addProductToCart(List<WebElement> itemsSet, String desiredItem){
+        WaitForElementToDisappear(toast);
+        for(WebElement selectedItem : itemsSet){
+            if(selectedItem.findElement(By.cssSelector("b")).getText().equalsIgnoreCase(desiredItem)){
+                WebElement btn = selectedItem.findElement(addToCartBtn);
+                WaitForWebElementToAppear(btn);
+                btn.click();
+                break;
             }
         }
     }
