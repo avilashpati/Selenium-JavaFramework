@@ -58,8 +58,6 @@ public class BaseTest {
 
             driver = new ChromeDriver(options);
 
-            driver.manage().window().setSize(new Dimension(1440, 900));
-
         } else if (browserName.equalsIgnoreCase("firefox")) {
 
             System.out.println("Firefox setup not implemented yet");
@@ -74,7 +72,11 @@ public class BaseTest {
         }
 
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-        driver.manage().window().maximize();
+        if (System.getenv("CI") != null) {
+            driver.manage().window().setSize(new Dimension(1920, 1080));
+        } else {
+            driver.manage().window().maximize();
+        }
 
         return driver;
     }
