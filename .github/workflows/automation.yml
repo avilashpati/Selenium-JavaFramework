@@ -17,11 +17,11 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          distribution: temurin
+          java-version: 17
 
       - name: Build Project
         run: mvn clean install -DskipTests
 
-      - name: Run Tests
-        run: mvn test
+      - name: Run Regression Suite
+        run: mvn test -PRegression
