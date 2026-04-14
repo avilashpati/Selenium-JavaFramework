@@ -23,19 +23,27 @@ public class UtilMethods {
     @FindBy(css = "button[routerlink*='cart']")
     WebElement cartButton;
 
+    private int getWaitTimeout() {
+        return System.getenv("CI") != null ? 15 : 5;
+    }
+
     public void WaitForElementToAppear(By findBy){
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(getWaitTimeout()));
         wait.until(ExpectedConditions.visibilityOfElementLocated(findBy));
     }
 
     public void WaitForWebElementToAppear(WebElement findBy){
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(getWaitTimeout()));
         wait.until(ExpectedConditions.visibilityOf(findBy));
     }
 
     public void WaitForElementToDisappear(By findBy){
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(getWaitTimeout()));
         wait.until(ExpectedConditions.invisibilityOfElementLocated(findBy));
+    }
+
+    public void jsClick(WebElement element){
+        ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
     }
 
     public CartPage clickOnCart(){

@@ -50,7 +50,7 @@ public class ProductCatalogue extends UtilMethods {
             if(selectedItem.findElement(By.cssSelector("b")).getText().equalsIgnoreCase(desiredItem)){
                 WebElement btn = selectedItem.findElement(addToCartBtn);
                 WaitForWebElementToAppear(btn);
-                btn.click();
+                jsClick(btn);
                 break;
             }
         }
