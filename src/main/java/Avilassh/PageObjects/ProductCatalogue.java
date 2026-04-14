@@ -20,7 +20,7 @@ public class ProductCatalogue extends UtilMethods {
         PageFactory.initElements(driver,this);
     }
 
-    @FindBy(css = ".mb-3 b")
+    @FindBy(css = ".mb-3")
     List<WebElement> items;
 
     @FindBy(css = ".mb-3 button:last-of-type")
@@ -55,6 +55,7 @@ public class ProductCatalogue extends UtilMethods {
             }
         }
     }
+
 
     public String fetchProductAddedToCartSuccessToast(){
         WaitForWebElementToAppear(cartAdditionNotification);
